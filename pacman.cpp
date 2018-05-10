@@ -14,7 +14,7 @@ struct Player {
     // position x, y
     int pos_x;
     int pos_y;
-
+	char name;
     // current direction of player
     // up: w
     // left: a
@@ -70,7 +70,7 @@ void moveQ(Player &quoc, int dx, int dy){				//move of player
 	map[quoc.pos_x][quoc.pos_y] = ' ';
 	quoc.pos_x += dx;
 	quoc.pos_y += dy;
-	map[quoc.pos_x][quoc.pos_y] = (char)5;
+	map[quoc.pos_x][quoc.pos_y] = quoc.name;
 	eaten_map[quoc.pos_x][quoc.pos_y] = 1;
 
 }
@@ -100,7 +100,7 @@ void moveN(Player &nam, char dir){						//move of ghost
 			nam.pos_y += 1;
 			break;
 	}
-	map[nam.pos_x][nam.pos_y] = (char)1;
+	map[nam.pos_x][nam.pos_y] = nam.name;
 
 }
 
@@ -262,14 +262,24 @@ int main() {
     Player nam, huong, hong;	//ghosts
     
     quoc.pos_x = quoc.pos_y = 1;
+<<<<<<< HEAD
+	quoc.name = 'Q';
+    nam.pos_x = nam.pos_y = 6;
+	nam.name = 'N';
+    huong.pos_x = huong.pos_y = 3;
+	huong.name = 'X';
+    hong.pos_x = hong.pos_y = 10;
+	hong.name = 'H';
+=======
     nam.pos_x = nam.pos_y = 5;
     huong.pos_x = huong.pos_y = 3;
     hong.pos_x = hong.pos_y = 4;
+>>>>>>> 4cca74376123db6f310010dd99a29789e08e646a
     
-    map[quoc.pos_x][quoc.pos_y] = (char)5;
-    map[nam.pos_x][nam.pos_y] = (char)1;
-    map[huong.pos_x][huong.pos_y] = (char)1;
-    map[hong.pos_x][hong.pos_y] = (char)1;
+    map[quoc.pos_x][quoc.pos_y] = quoc.name;
+    map[nam.pos_x][nam.pos_y] = nam.name;
+    map[huong.pos_x][huong.pos_y] = huong.name;
+    map[hong.pos_x][hong.pos_y] = hong.name;
     
 	display();
 	nam.dir = gen_dir(nam);
@@ -277,7 +287,11 @@ int main() {
 	hong.dir = gen_dir(hong);
 	
 	//====================================================PLAYER=============================================================//
+<<<<<<< HEAD
+	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){
+=======
 	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){   
+>>>>>>> 4cca74376123db6f310010dd99a29789e08e646a
 		runningPlayer(quoc);
 		runningGhost(nam);
 		runningGhost(huong);
