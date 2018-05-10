@@ -24,7 +24,7 @@ struct Player {
 };
 
 
-#define num 11
+#define num 9
 char map[num][num];
 int eaten_map[num][num];
 
@@ -108,16 +108,8 @@ int checkPvG (Player Q, Player N){				// check if player and ghosts meet
 	}
 }
 
-int checkObs(Player &H, int dx, int dy){		// check if upward cell is an obstacle
-	if (map[H.pos_x+dx][H.pos_y+dy] == 'X'){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
 
-int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall
+int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / obstacles
 	if (map[H.pos_x+dx][H.pos_y+dy] == '#'){
 		return true;
 	}
@@ -143,28 +135,28 @@ void runningPlayer (Player &quoc){
 	}
 	switch (quoc.dir){
 		case 'a':
-			if (checkObs(quoc, 0, -1) == false && checkWalls(quoc, 0, -1) == false){
+			if (checkWalls(quoc, 0, -1) == false){
 				moveQ(quoc, 0, -1);break;
 			}
 			else{
 				break;
 			}
 		case 'd':
-			if (checkObs(quoc, 0, 1) == false && checkWalls(quoc, 0, 1) == false){
+			if (checkWalls(quoc, 0, 1) == false){
 				moveQ(quoc, 0, 1);break;
 			}
 			else{
 				break;
 			}
 		case 'w':
-			if (checkObs(quoc, -1, 0) == false && checkWalls(quoc, -1, 0) == false){
+			if (checkWalls(quoc, -1, 0) == false){
 				moveQ(quoc, -1, 0);break;
 			}
 			else{
 				break;
 			}
 		case 's':
-			if (checkObs(quoc, 1, 0) == false && checkWalls(quoc, 1, 0) == false){
+			if (checkWalls(quoc, 1, 0) == false){
 				moveQ(quoc, 1, 0);break;
 			}
 			else{
@@ -192,7 +184,7 @@ void runningGhost (Player &nam){
 	srand(time(NULL));
 	switch (nam.dir){
 		case 'a':
-			if (checkObs(nam, 0, -1) == false && checkWalls(nam, 0, -1) == false){
+			if (checkWalls(nam, 0, -1) == false){
 				moveN(nam, 0, -1);break;
 			}
 			else{
@@ -200,7 +192,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 		case 'd':
-			if (checkObs(nam, 0, 1) == false && checkWalls(nam, 0, 1) == false){
+			if (checkWalls(nam, 0, 1) == false){
 				moveN(nam, 0, 1);break;
 			}
 			else{
@@ -208,7 +200,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 		case 'w':
-			if (checkObs(nam, -1, 0) == false && checkWalls(nam, -1, 0) == false){
+			if (checkWalls(nam, -1, 0) == false){
 				moveN(nam, -1, 0);break;
 			}
 			else{
@@ -216,7 +208,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 		case 's':
-			if (checkObs(nam, 1, 0) == false && checkWalls(nam, 1, 0) == false){
+			if (checkWalls(nam, 1, 0) == false){
 				moveN(nam, 1, 0);break;
 			}
 			else{
@@ -231,11 +223,11 @@ int main() {
 	init_map();
 	
     Player quoc;				//player
-    Player nam, huong, hong;	//ghost
+    Player nam, huong, hong;	//ghosts
     
     quoc.pos_x = quoc.pos_y = 1;
     nam.pos_x = nam.pos_y = 5;
-    huong.pos_x = huong.pos_y = 8;
+    huong.pos_x = huong.pos_y = 3;
     hong.pos_x = hong.pos_y = 4;
     
     map[quoc.pos_x][quoc.pos_y] = 'Q';
@@ -248,8 +240,7 @@ int main() {
 	huong.dir = gen_dir(rand() % 4 + 1);
 	hong.dir = gen_dir(rand() % 4 + 1);
 	//====================================================PLAYER=============================================================//
-	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){
-		runningPlayer(quoc);
+	while (checkF() != 0 ){
 		runningGhost(nam);
 		runningGhost(huong);
 		runningGhost(hong);
