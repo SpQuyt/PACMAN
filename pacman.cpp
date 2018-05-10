@@ -24,20 +24,7 @@ struct Player {
 };
 
 
-struct Ghost{
-	// position x, y
-    int pos_x;
-    int pos_y;
-
-    // current direction of player
-    // up: w
-    // left: a
-    // right: d
-    // down: s
-    char dir;
-};
-
-#define num 9
+#define num 15
 char map[num][num];
 int eaten_map[num][num];
 
@@ -78,7 +65,7 @@ void display(){
 	_sleep(500);
 }
 
-void moveQ(Player &quoc, int dx, int dy){
+void moveQ(Player &quoc, int dx, int dy){				//move of player
 	map[quoc.pos_x][quoc.pos_y] = ' ';
 	quoc.pos_x += dx;
 	quoc.pos_y += dy;
@@ -87,7 +74,7 @@ void moveQ(Player &quoc, int dx, int dy){
 
 }
 
-void moveN(Player &nam, int dx, int dy){
+void moveN(Player &nam, int dx, int dy){				//move of ghost
 	if (eaten_map[nam.pos_x][nam.pos_y] == 1){
 		map[nam.pos_x][nam.pos_y] = ' ';
 	}
