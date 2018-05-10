@@ -53,23 +53,6 @@ void init_map(){
             eaten_map[i][j] = 0;
         }
     }	
-    
-	// create wall
-    for (int i = 0; i < num; i++) {
-        for (int j = 0; j < num; j++) {
-            map[i][j] = '#';
-        }
-    }	
-	
-    // create fooood
-    for (int i = 1; i < num-1; i++) {
-        for (int j = 1; j < num-1; j++) {
-            map[i][j] = '.';
-        }
-    }
-    
-	// create obstacle
-	map[4][5] = map[3][6] = map[1][7] = map[7][5] = map[6][1] = '#';
 }
 
 void display(){
