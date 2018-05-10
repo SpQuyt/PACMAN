@@ -27,7 +27,6 @@ struct Player {
 #define num 9
 char map[num][num];
 int eaten_map[num][num];
-int avail_next[4] = {};
 
 
 void init_map(){
@@ -183,19 +182,29 @@ void runningPlayer (Player &quoc){
 	}	
 }
 
-char gen_dir(int temp){				//generate a random direction for ghosts
-	char dir;
-	switch(temp){
-		case 1:
-			dir = 'w'; break;
-		case 2:
-			dir = 's'; break;
-		case 3:
-			dir = 'a'; break;
-		case 4:
-			dir = 'd'; break;
+char gen_dir(Player &H){				//generate a random direction for ghosts
+	int i = 0;
+	int avail_next[4] = {};
+	if (checkWalls(H, 0, 1) == false){
+		avail_next[i] = 'd';
+		i++;
 	}
-	return dir;
+	if (checkWalls(H, 0, -1) == false){
+		avail_next[i] = 'a';
+		i++;
+	}
+	if (checkWalls(H, 1, 0) == false){
+		avail_next[i] = 's';
+		i++;
+	}
+	if (checkWalls(H, -1, 0) == false){
+		avail_next[i] = 'w';
+		i++;
+	}
+	int random = rand() % i;
+
+	i = 0;
+	return avail_next[random];
 }
 
 void runningGhost (Player &nam){
@@ -207,7 +216,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 			else{
-				nam.dir = gen_dir(rand() % 4 + 1);
+				nam.dir = gen_dir(nam);
 				//moveN(nam, nam.dir);
 				break;
 			}
@@ -217,7 +226,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 			else{
-				nam.dir = gen_dir(rand() % 4 + 1);
+				nam.dir = gen_dir(nam);
 				//moveN(nam, nam.dir);
 				break;
 			}
@@ -227,7 +236,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 			else{
-				nam.dir = gen_dir(rand() % 4 + 1);
+				nam.dir = gen_dir(nam);
 				//moveN(nam, nam.dir);
 				break;
 			}
@@ -237,7 +246,7 @@ void runningGhost (Player &nam){
 				break;
 			}
 			else{
-				nam.dir = gen_dir(rand() % 4 + 1);
+				nam.dir = gen_dir(nam);
 				//moveN(nam, nam.dir);
 				break;
 			}
@@ -253,24 +262,24 @@ int main() {
     
     quoc.pos_x = quoc.pos_y = 1;
     nam.pos_x = nam.pos_y = 5;
-    //huong.pos_x = huong.pos_y = 3;
-    //hong.pos_x = hong.pos_y = 4;
+    huong.pos_x = huong.pos_y = 3;
+    hong.pos_x = hong.pos_y = 4;
     
     map[quoc.pos_x][quoc.pos_y] = 'Q';
     map[nam.pos_x][nam.pos_y] = 'N';
-    //map[huong.pos_x][huong.pos_y] = 'N';
-    //map[hong.pos_x][hong.pos_y] = 'N';
+    map[huong.pos_x][huong.pos_y] = 'N';
+    map[hong.pos_x][hong.pos_y] = 'N';
     
 	display();
-	nam.dir = gen_dir(rand() % 4 + 1);
-	//huong.dir = gen_dir(rand() % 4 + 1);
-	//hong.dir = gen_dir(rand() % 4 + 1);
+	nam.dir = gen_dir(nam);
+	huong.dir = gen_dir(huong);
+	hong.dir = gen_dir(hong);
 	//====================================================PLAYER=============================================================//
 	while (checkF() != 0 ){   //&& checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false
 		//runningPlayer(quoc);
 		runningGhost(nam);
-		//runningGhost(huong);
-		//runningGhost(hong);
+		runningGhost(huong);
+		runningGhost(hong);
 		display();
 	}
 }
