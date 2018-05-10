@@ -127,7 +127,7 @@ int checkPvG (Player Q, Player N){				// check if player and ghosts meet
 
 
 int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / obstacles
-	if (map[H.pos_x + dx][H.pos_y + dy] == '#' || map[H.pos_x + dx][H.pos_y + dy] == (char)1){
+	if (map[H.pos_x + dx][H.pos_y + dy] == '#' || map[H.pos_x + dx][H.pos_y + dy] == 'N' || map[H.pos_x + dx][H.pos_y + dy] == 'H' || map[H.pos_x + dx][H.pos_y + dy] == 'X'){
 		return true;
 	}
 	else{
@@ -262,7 +262,6 @@ int main() {
     Player nam, huong, hong;	//ghosts
     
     quoc.pos_x = quoc.pos_y = 1;
-<<<<<<< HEAD
 	quoc.name = 'Q';
     nam.pos_x = nam.pos_y = 6;
 	nam.name = 'N';
@@ -270,11 +269,7 @@ int main() {
 	huong.name = 'X';
     hong.pos_x = hong.pos_y = 10;
 	hong.name = 'H';
-=======
-    nam.pos_x = nam.pos_y = 5;
-    huong.pos_x = huong.pos_y = 3;
-    hong.pos_x = hong.pos_y = 4;
->>>>>>> 4cca74376123db6f310010dd99a29789e08e646a
+
     
     map[quoc.pos_x][quoc.pos_y] = quoc.name;
     map[nam.pos_x][nam.pos_y] = nam.name;
@@ -287,11 +282,8 @@ int main() {
 	hong.dir = gen_dir(hong);
 	
 	//====================================================PLAYER=============================================================//
-<<<<<<< HEAD
-	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){
-=======
+
 	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){   
->>>>>>> 4cca74376123db6f310010dd99a29789e08e646a
 		runningPlayer(quoc);
 		runningGhost(nam);
 		runningGhost(huong);
