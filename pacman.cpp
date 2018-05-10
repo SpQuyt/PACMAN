@@ -24,7 +24,7 @@ struct Player {
 };
 
 
-#define num 10
+#define num 11
 char map[num][num];
 int eaten_map[num][num];
 
@@ -51,7 +51,7 @@ void init_map(){
     }
     
 	// create obstacle
-	map[4][5] = map[3][6] = map[1][7] = map[7][5] = map[6][1] = 'X';
+	map[4][5] = map[3][6] = map[1][7] = map[7][5] = map[6][1] = '#';
 }
 
 void display(){
@@ -62,7 +62,7 @@ void display(){
 		}
 		cout << ' ' <<endl;
 	}
-	_sleep(500);
+	_sleep(300);
 }
 
 void moveQ(Player &quoc, int dx, int dy){				//move of player
@@ -87,7 +87,7 @@ void moveN(Player &nam, int dx, int dy){				//move of ghost
 
 }
 
-int checkF(){
+int checkF(){									// check if all food is eaten
 	int count;
 	for (int i = 1; i < num-1; i++){
 		for (int j = 1; j < num-1; j++){
@@ -230,9 +230,9 @@ int main() {
 	
 	init_map();
 	
-    Player quoc;	//player
-    
+    Player quoc;				//player
     Player nam, huong, hong;	//ghost
+    
     quoc.pos_x = quoc.pos_y = 1;
     nam.pos_x = nam.pos_y = 5;
     huong.pos_x = huong.pos_y = 8;
