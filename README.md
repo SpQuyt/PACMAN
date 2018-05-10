@@ -1,4 +1,4 @@
-# _PACMAN - C++ game by SpQuyt_
+# _PACMAN - C++ game by SpQuyt & namdaoduy_
 
 FEATURES
 - [X] Moveable character
