@@ -24,7 +24,7 @@ struct Player {
 };
 
 
-#define num 9
+#define num 15
 char map[num][num];
 int eaten_map[num][num];
 
@@ -275,8 +275,8 @@ int main() {
 	huong.dir = gen_dir(huong);
 	hong.dir = gen_dir(hong);
 	//====================================================PLAYER=============================================================//
-	while (checkF() != 0 ){   //&& checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false
-		//runningPlayer(quoc);
+	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){   //
+		runningPlayer(quoc);
 		runningGhost(nam);
 		runningGhost(huong);
 		runningGhost(hong);
