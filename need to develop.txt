@@ -1,0 +1,4 @@
+1. thiết kế lại bản đồ.
+2. bug khi 2 con ghost chập vào nhau thì bọn nó sẽ bị hoà làm 1.
+3. thiết kế hàm detect.
+4. chỉnh lại hàm random dir cho ghost.
