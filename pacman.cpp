@@ -27,6 +27,8 @@ struct Player {
 #define num 9
 char map[num][num];
 int eaten_map[num][num];
+int avail_next[4] = {};
+
 
 void init_map(){
 	//init eaten map
