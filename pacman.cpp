@@ -39,8 +39,16 @@ struct Ghost{
 
 #define num 9
 char map[num][num];
+int eaten_map[num][num];
 
 void init_map(){
+	//init eaten map
+	for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            eaten_map[i][j] = 0;
+        }
+    }	
+    
 	// create wall
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
@@ -67,15 +75,29 @@ void display(){
 		}
 		cout << ' ' <<endl;
 	}
-	_sleep(50);
+	_sleep(500);
 }
 
-void move(int x, int y, int dx, int dy){
-	map[x][y] = ' ';
-	x = x + dx;
-	y = y + dy;
-	map[x][y] = 'Q';
-	display();
+void moveQ(Player &quoc, int dx, int dy){
+	map[quoc.pos_x][quoc.pos_y] = ' ';
+	quoc.pos_x += dx;
+	quoc.pos_y += dy;
+	map[quoc.pos_x][quoc.pos_y] = 'Q';
+	eaten_map[quoc.pos_x][quoc.pos_y] = 1;
+
+}
+
+void moveN(Player &nam, int dx, int dy){
+	if (eaten_map[nam.pos_x][nam.pos_y] == 1){
+		map[nam.pos_x][nam.pos_y] = ' ';
+	}
+	else{
+		map[nam.pos_x][nam.pos_y] = '.';
+	}
+	nam.pos_x += dx;
+	nam.pos_y += dy;
+	map[nam.pos_x][nam.pos_y] = 'N';
+
 }
 
 int checkF(){
@@ -90,21 +112,150 @@ int checkF(){
 	return count;
 }
 
+int checkPvG (Player Q, Player N){
+	if (Q.pos_x == N.pos_x && Q.pos_y == N.pos_y){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+int checkObs(Player &H, int dx, int dy){
+	if (map[H.pos_x+dx][H.pos_y+dy] == 'X'){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+int checkWalls(Player &H, int dx, int dy){
+	if (map[H.pos_x+dx][H.pos_y+dy] == '#'){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+void runningPlayer (Player &quoc){
+	if (kbhit()){
+		if (GetAsyncKeyState(VK_UP)){
+			quoc.dir = 'w';
+		}
+		else if (GetAsyncKeyState(VK_DOWN)){
+			quoc.dir = 's';
+		}
+		else if (GetAsyncKeyState(VK_RIGHT)){
+			quoc.dir = 'd';
+		}
+		else if (GetAsyncKeyState(VK_LEFT)){
+			quoc.dir = 'a';
+		}
+	}
+	switch (quoc.dir){
+		case 'a':
+			if (checkObs(quoc, 0, -1) == false && checkWalls(quoc, 0, -1) == false){
+				moveQ(quoc, 0, -1);break;
+			}
+			else{
+				break;
+			}
+		case 'd':
+			if (checkObs(quoc, 0, 1) == false && checkWalls(quoc, 0, 1) == false){
+				moveQ(quoc, 0, 1);break;
+			}
+			else{
+				break;
+			}
+		case 'w':
+			if (checkObs(quoc, -1, 0) == false && checkWalls(quoc, -1, 0) == false){
+				moveQ(quoc, -1, 0);break;
+			}
+			else{
+				break;
+			}
+		case 's':
+			if (checkObs(quoc, 1, 0) == false && checkWalls(quoc, 1, 0) == false){
+				moveQ(quoc, 1, 0);break;
+			}
+			else{
+				break;
+			}
+	}	
+}
+
+char gen_dir(int temp){
+	char dir;
+	switch(temp){
+		case 1:
+			dir = 'w'; break;
+		case 2:
+			dir = 's'; break;
+		case 3:
+			dir = 'a'; break;
+		case 4:
+			dir = 'd'; break;
+	}
+	return dir;
+}
+
+void runningGhost (Player &nam){
+	srand(time(NULL));
+	switch (nam.dir){
+		case 'a':
+			if (checkObs(nam, 0, -1) == false && checkWalls(nam, 0, -1) == false){
+				moveN(nam, 0, -1);break;
+			}
+			else{
+				nam.dir = gen_dir(rand() % 4 + 1);
+				break;
+			}
+		case 'd':
+			if (checkObs(nam, 0, 1) == false && checkWalls(nam, 0, 1) == false){
+				moveN(nam, 0, 1);break;
+			}
+			else{
+				nam.dir = gen_dir(rand() % 4 + 1);
+				break;
+			}
+		case 'w':
+			if (checkObs(nam, -1, 0) == false && checkWalls(nam, -1, 0) == false){
+				moveN(nam, -1, 0);break;
+			}
+			else{
+				nam.dir = gen_dir(rand() % 4 + 1);
+				break;
+			}
+		case 's':
+			if (checkObs(nam, 1, 0) == false && checkWalls(nam, 1, 0) == false){
+				moveN(nam, 1, 0);break;
+			}
+			else{
+				nam.dir = gen_dir(rand() % 4 + 1);
+				break;
+			}
+	}	
+}
 
 int main() {
 	
 	init_map();
 	
     Player quoc;
-    //Ghost nam;
+    Player nam;
     quoc.pos_x = quoc.pos_y = 1;
-    //nam.pos_x = nam.pos_y = 7;
+    nam.pos_x = nam.pos_y = 5;
     map[quoc.pos_x][quoc.pos_y] = 'Q';
-    //map[nam.pos_x][nam.pos_y] = 'N';
+    map[nam.pos_x][nam.pos_y] = 'N';
     
 	display();
+	nam.dir = gen_dir(rand() % 4 + 1);
 	//====================================================PLAYER=============================================================//
-	while (checkF() != 0){
-		move(quoc.pos_x, quoc.pos_y, 0 , 1);
+	while (checkF() != 0 && checkPvG(quoc,nam) == false){
+		runningPlayer(quoc);
+		runningGhost(nam);
+		display();
 	}
 }
