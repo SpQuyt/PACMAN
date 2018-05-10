@@ -248,7 +248,7 @@ int main() {
 	huong.dir = gen_dir(rand() % 4 + 1);
 	hong.dir = gen_dir(rand() % 4 + 1);
 	//====================================================PLAYER=============================================================//
-	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc.hong)){
+	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){
 		runningPlayer(quoc);
 		runningGhost(nam);
 		runningGhost(huong);
