@@ -127,13 +127,14 @@ int checkPvG (Player Q, Player N){				// check if player and ghosts meet
 
 
 int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / obstacles
-	if (map[H.pos_x+dx][H.pos_y+dy] == '#'){
+	if (map[H.pos_x + dx][H.pos_y + dy] == '#' || map[H.pos_x + dx][H.pos_y + dy] == (char)1){
 		return true;
 	}
 	else{
 		return false;
 	}
 }
+
 
 void runningPlayer (Player &quoc){
 	if (kbhit()){
