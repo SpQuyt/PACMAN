@@ -24,28 +24,28 @@ struct Player {
 };
 
 
-#define num 15
+#define num 10
 char map[num][num];
 int eaten_map[num][num];
 
 void init_map(){
 	//init eaten map
-	for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
+	for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
             eaten_map[i][j] = 0;
         }
     }	
     
 	// create wall
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
+    for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
             map[i][j] = '#';
         }
     }	
 	
     // create fooood
-    for (int i = 1; i < 8; i++) {
-        for (int j = 1; j < 8; j++) {
+    for (int i = 1; i < num-1; i++) {
+        for (int j = 1; j < num-1; j++) {
             map[i][j] = '.';
         }
     }
@@ -56,8 +56,8 @@ void init_map(){
 
 void display(){
 	system ("cls");	
-	for (int i = 0; i < 9; i++){
-		for (int j = 0; j < 9; j++){
+	for (int i = 0; i < num; i++){
+		for (int j = 0; j < num; j++){
 			cout << ' ' << map[i][j]; 
 		}
 		cout << ' ' <<endl;
@@ -89,8 +89,8 @@ void moveN(Player &nam, int dx, int dy){				//move of ghost
 
 int checkF(){
 	int count;
-	for (int i = 1; i < 8; i++){
-		for (int j = 1; j < 8; j++){
+	for (int i = 1; i < num-1; i++){
+		for (int j = 1; j < num-1; j++){
 			if (map[i][j] == '.'){
 				count ++;
 			}
@@ -99,7 +99,7 @@ int checkF(){
 	return count;
 }
 
-int checkPvG (Player Q, Player N){
+int checkPvG (Player Q, Player N){				// check if player and ghosts meet
 	if (Q.pos_x == N.pos_x && Q.pos_y == N.pos_y){
 		return true;
 	}
@@ -108,7 +108,7 @@ int checkPvG (Player Q, Player N){
 	}
 }
 
-int checkObs(Player &H, int dx, int dy){
+int checkObs(Player &H, int dx, int dy){		// check if upward cell is an obstacle
 	if (map[H.pos_x+dx][H.pos_y+dy] == 'X'){
 		return true;
 	}
@@ -117,7 +117,7 @@ int checkObs(Player &H, int dx, int dy){
 	}
 }
 
-int checkWalls(Player &H, int dx, int dy){
+int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall
 	if (map[H.pos_x+dx][H.pos_y+dy] == '#'){
 		return true;
 	}
@@ -173,7 +173,7 @@ void runningPlayer (Player &quoc){
 	}	
 }
 
-char gen_dir(int temp){
+char gen_dir(int temp){				//generate a random direction for ghosts
 	char dir;
 	switch(temp){
 		case 1:
@@ -230,19 +230,29 @@ int main() {
 	
 	init_map();
 	
-    Player quoc;
-    Player nam;
+    Player quoc;	//player
+    
+    Player nam, huong, hong;	//ghost
     quoc.pos_x = quoc.pos_y = 1;
     nam.pos_x = nam.pos_y = 5;
+    huong.pos_x = huong.pos_y = 8;
+    hong.pos_x = hong.pos_y = 4;
+    
     map[quoc.pos_x][quoc.pos_y] = 'Q';
     map[nam.pos_x][nam.pos_y] = 'N';
+    map[huong.pos_x][huong.pos_y] = 'N';
+    map[hong.pos_x][hong.pos_y] = 'N';
     
 	display();
 	nam.dir = gen_dir(rand() % 4 + 1);
+	huong.dir = gen_dir(rand() % 4 + 1);
+	hong.dir = gen_dir(rand() % 4 + 1);
 	//====================================================PLAYER=============================================================//
-	while (checkF() != 0 && checkPvG(quoc,nam) == false){
+	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc.hong)){
 		runningPlayer(quoc);
 		runningGhost(nam);
+		runningGhost(huong);
+		runningGhost(hong);
 		display();
 	}
 }
