@@ -25,12 +25,28 @@ struct Player {
 
 
 #define num 15
-char map[num][num];
+char map[num][num] = {	
+		'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#',
+		'#','.','.','.','.','.','.','.','.','.','.','.','.','.','#',
+		'#','.','#','#','#','#','#','#','.','#','.','#','#','.','#',
+		'#','.','.','.','.','.','.','#','.','#','.','#','.','.','#',
+		'#','.','.','.','.','.','.','#','.','#','.','#','.','.','#',
+		'#','#','#','#','#','#','#','#','.','#','.','#','.','.','#',
+		'#','.','.','.','.','.','.','.','.','#','.','#','.','.','#',
+		'#','.','#','#','#','#','#','#','#','#','.','#','#','.','#',
+		'#','.','.','.','.','.','.','.','.','.','.','.','.','.','#',
+		'#','.','#','#','#','#','#','#','#','#','.','#','#','.','#',
+		'#','.','.','.','.','.','.','.','.','.','.','.','.','.','#',
+		'#','.','#','#','#','#','#','#','#','#','.','#','#','.','#',
+		'#','.','#','.','.','.','.','.','.','.','.','.','.','.','#',
+		'#','.','.','.','.','.','.','#','.','.','.','.','.','.','#',
+		'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'	
+	};
 int eaten_map[num][num];
 
 
 void init_map(){
-	//init eaten map
+	// init eaten map
 	for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
             eaten_map[i][j] = 0;
@@ -255,15 +271,15 @@ void runningGhost (Player &nam){
 
 int main() {
 	
-	init_map();
+	// init_map();
 	
     Player quoc;				//player
     Player nam, huong, hong;	//ghosts
     
     quoc.pos_x = quoc.pos_y = 1;
-    nam.pos_x = nam.pos_y = 5;
+    nam.pos_x = nam.pos_y = 6;
     huong.pos_x = huong.pos_y = 3;
-    hong.pos_x = hong.pos_y = 4;
+    hong.pos_x = hong.pos_y = 10;
     
     map[quoc.pos_x][quoc.pos_y] = (char)5;
     map[nam.pos_x][nam.pos_y] = (char)1;
@@ -276,7 +292,11 @@ int main() {
 	hong.dir = gen_dir(hong);
 	
 	//====================================================PLAYER=============================================================//
+<<<<<<< HEAD
 	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){   
+=======
+	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){
+>>>>>>> c2f8e90885d0fd8b5569256f670d48d4e32b7199
 		runningPlayer(quoc);
 		runningGhost(nam);
 		runningGhost(huong);
