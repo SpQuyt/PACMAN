@@ -8,7 +8,7 @@ FEATURES
 ---
 
 DEVELOPING
-- [ ] Remaking map
-- [ ] BUG: 2 ghost become 1 while colliding
+- [X] Remaking map
+- [X] BUG: 2 ghost become 1 while colliding
 - [ ] NEW FEATURE: ghost.detect() to detect pacman coming closely, then tracking.
-- [ ] Fix ghost.randomDir()
+- [X] Fix ghost.randomDir()
