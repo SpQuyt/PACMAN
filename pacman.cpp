@@ -45,13 +45,28 @@ char map[num][num] = {
 	};
 	
 int eaten_map[num][num];
+int visited_map[num][num];
+int detect_map[num][num];
 
+void init_detect_map(){
+	for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
+            if (map[i][j] == '#'){
+            	detect_map[i][j] = 0;		//un-go-able
+			}
+			else {
+				detect_map[i][j] = 1;		//go-able
+			}
+        }
+    }	
+}
 
 void init_map(){
-	//init eaten map
+	//init eaten map & visited_map
 	for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
             eaten_map[i][j] = 0;
+            visited_map[i][j] = 0;
         }
     }	
 }
@@ -127,7 +142,7 @@ int checkPvG (Player Q, Player N){				// check if player and ghosts meet
 }
 
 
-int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / obstacles
+int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / obstacles / ghosts
 	if (map[H.pos_x + dx][H.pos_y + dy] == '#' || map[H.pos_x + dx][H.pos_y + dy] == 'N' || map[H.pos_x + dx][H.pos_y + dy] == 'H' || map[H.pos_x + dx][H.pos_y + dy] == 'X'){
 		return true;
 	}
@@ -136,6 +151,24 @@ int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / o
 	}
 }
 
+void trace(Player &quoc, int &x, int &y){
+	if (x == quoc.pos_x && y = quoc.pos_y){
+		visited_map[x][y] = 1;
+		exit();
+	}
+	else if (x < num-1 && x > 0 && y < num-1 && y > 0){
+		if (visited_map[i][j] == 1 || detect_map[i][j] == 0){
+			return;
+		}
+		else if ()
+		visited_map[x][y] = 1;
+		trace(quoc, x+0, y+1);
+		trace(quoc, x+0, y-1);
+		trace(quoc, x+1, y+0);
+		trace(quoc, x-1, y+0);
+		visited_map[x][y] = 0;
+	}
+}
 
 void runningPlayer (Player &quoc){
 	if (kbhit()){
@@ -257,7 +290,7 @@ void runningGhost (Player &nam){
 
 int main() {
 	
-	init_map();
+	init_eaten_map();
 	
     Player quoc;				//player
     Player nam, huong, hong;	//ghosts
@@ -266,29 +299,30 @@ int main() {
 	quoc.name = 'Q';
     nam.pos_x = nam.pos_y = 6;
 	nam.name = 'N';
-    huong.pos_x = huong.pos_y = 3;
-	huong.name = 'X';
-    hong.pos_x = hong.pos_y = 10;
-	hong.name = 'H';
+//    huong.pos_x = huong.pos_y = 3;
+//	huong.name = 'X';
+//    hong.pos_x = hong.pos_y = 10;
+//	hong.name = 'H';
 
     
     map[quoc.pos_x][quoc.pos_y] = quoc.name;
     map[nam.pos_x][nam.pos_y] = nam.name;
-    map[huong.pos_x][huong.pos_y] = huong.name;
-    map[hong.pos_x][hong.pos_y] = hong.name;
+//    map[huong.pos_x][huong.pos_y] = huong.name;
+//    map[hong.pos_x][hong.pos_y] = hong.name;
     
 	display();
+	
 	nam.dir = gen_dir(nam);
-	huong.dir = gen_dir(huong);
-	hong.dir = gen_dir(hong);
+//	huong.dir = gen_dir(huong);
+//	hong.dir = gen_dir(hong);
 	
 	//====================================================PLAYER=============================================================//
 
 	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){   
 		runningPlayer(quoc);
 		runningGhost(nam);
-		runningGhost(huong);
-		runningGhost(hong);
+//		runningGhost(huong);
+//		runningGhost(hong);
 		display();
 	}
 }
