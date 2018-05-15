@@ -47,6 +47,10 @@ char map[num][num] = {
 int eaten_map[num][num];
 int visited_map[num][num];
 int detect_map[num][num];
+int minimum_map[num][num];
+int enable_detect_mode = 0;
+int step = 0; int record = 9999;
+
 
 void init_detect_map(){
 	for (int i = 0; i < num; i++) {
@@ -61,12 +65,21 @@ void init_detect_map(){
     }	
 }
 
-void init_map(){
-	//init eaten map & visited_map
+void init_eaten_map(){
+	//init eaten map
 	for (int i = 0; i < num; i++) {
         for (int j = 0; j < num; j++) {
-            eaten_map[i][j] = 0;
             visited_map[i][j] = 0;
+        }
+    }	
+}
+
+void init_visited_map(){
+	//init eaten map && init minimum
+	for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
+            visited_map[i][j] = 0;
+            minimum_map[i][j] = 0;
         }
     }	
 }
@@ -151,25 +164,6 @@ int checkWalls(Player &H, int dx, int dy){		//check if upward cell is a wall / o
 	}
 }
 
-void trace(Player &quoc, int &x, int &y){
-	if (x == quoc.pos_x && y = quoc.pos_y){
-		visited_map[x][y] = 1;
-		exit();
-	}
-	else if (x < num-1 && x > 0 && y < num-1 && y > 0){
-		if (visited_map[i][j] == 1 || detect_map[i][j] == 0){
-			return;
-		}
-		else if ()
-		visited_map[x][y] = 1;
-		trace(quoc, x+0, y+1);
-		trace(quoc, x+0, y-1);
-		trace(quoc, x+1, y+0);
-		trace(quoc, x-1, y+0);
-		visited_map[x][y] = 0;
-	}
-}
-
 void runningPlayer (Player &quoc){
 	if (kbhit()){
 		if (GetAsyncKeyState(VK_UP)){
@@ -238,13 +232,60 @@ char gen_dir(Player &H){				//generate a random direction for ghosts
 		i++;
 	}
 	int random = rand() % i;
-
 	i = 0;
+	
 	return avail_next[random];
 }
 
-void runningGhost (Player &nam){
-	switch (nam.dir){
+void trace(Player &quoc, int x, int y){
+	if (x == quoc.pos_x && y == quoc.pos_y){
+		visited_map[x][y] = 1;
+		step++;
+		
+
+		cout <<' '<<endl<<' '<<endl;
+		cout<<' '<<step<<'.'<<endl;	
+		for (int i = 0; i < num; i++){
+			for (int j = 0; j < num; j++){
+				cout << ' ' << visited_map[i][j]; 
+			}
+			cout << ' ' <<endl;
+		}
+		
+		
+		if (step < record){
+			record = step;
+			for (int i = 0; i < num; i++){
+				for (int j = 0; j < num; j++){
+					minimum_map[i][j] = visited_map[i][j];
+				}
+			}	
+		}
+//		exit(0);
+	}
+	else if (x < num-1 && x > 0 && y < num-1 && y > 0){
+		if (visited_map[x][y] == 1){
+			return;
+		}
+		else if (detect_map[x][y] == 0){
+			return;
+		}
+		else{
+			visited_map[x][y] = 1;
+			step++;
+			trace(quoc, x-1, y+0);
+			trace(quoc, x+0, y-1);
+			trace(quoc, x+0, y+1);
+			trace(quoc, x+1, y+0);
+			visited_map[x][y] = 0;
+			step--;
+		}	
+	}
+}
+
+void runningGhost (Player &quoc, Player &nam){
+	if (enable_detect_mode == 0){
+		switch (nam.dir){
 		case 'a':
 			if (checkWalls(nam, 0, -1) == false){
 				moveN(nam, nam.dir);
@@ -285,12 +326,40 @@ void runningGhost (Player &nam){
 				moveN(nam, nam.dir);
 				break;
 			}
-	}	
+		}	
+	}
+	else if (enable_detect_mode == 1){
+		init_detect_map();
+		init_visited_map();
+		trace(quoc, nam.pos_x, nam.pos_y);
+		
+
+		
+		cout << ' '<< endl << nam.pos_x << nam.pos_y << endl;
+		if (map[nam.pos_x+1][nam.pos_y+0] == 1){
+			nam.dir = 's';
+			moveN(nam, nam.dir);
+		}
+		else if (map[nam.pos_x-1][nam.pos_y+0] == 1){
+			nam.dir = 'w';
+			moveN(nam, nam.dir);
+		}
+		else if (map[nam.pos_x+0][nam.pos_y+1] == 1){
+			nam.dir = 'd';
+			moveN(nam, nam.dir);
+		}
+		else if (map[nam.pos_x+0][nam.pos_y-1] == 1){
+			nam.dir = 'a';
+			moveN(nam, nam.dir);
+		}
+	}
 }
 
 int main() {
 	
 	init_eaten_map();
+	init_visited_map();
+	init_detect_map();
 	
     Player quoc;				//player
     Player nam, huong, hong;	//ghosts
@@ -312,17 +381,37 @@ int main() {
     
 	display();
 	
-	nam.dir = gen_dir(nam);
+//	nam.dir = gen_dir(nam);
 //	huong.dir = gen_dir(huong);
 //	hong.dir = gen_dir(hong);
 	
 	//====================================================PLAYER=============================================================//
 
-	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){   
-		runningPlayer(quoc);
-		runningGhost(nam);
-//		runningGhost(huong);
-//		runningGhost(hong);
-		display();
+//	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){  
+//		enable_detect_mode = 1; 
+//		runningPlayer(quoc);
+//		runningGhost(quoc,nam);
+////		runningGhost(huong);
+////		runningGhost(hong);
+//		display();
+//		system ("cls");	
+//		for (int i = 0; i < num; i++){
+//			for (int j = 0; j < num; j++){
+//				cout << ' ' << visited_map[i][j]; 
+//			}
+//			cout << ' ' <<endl;
+//		}
+//		_sleep(1000);
+//	}
+
+	trace(quoc, 1, 10);
+	cout <<' '<<endl<<' '<<endl;	
+	for (int i = 0; i < num; i++){
+		for (int j = 0; j < num; j++){
+			cout << ' ' << minimum_map[i][j]; 
+		}
+		cout << ' ' <<endl;
 	}
+	_sleep(300);
+			
 }
