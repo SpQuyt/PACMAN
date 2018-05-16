@@ -51,6 +51,7 @@ int minimum_map[num][num];
 int enable_detect_mode = 0;
 int step = 0, record = 999;
 int maxpoint = 110; 				// the place where the pacman presents is not counted
+int point = 0;
 
 void init_eaten_map(){
 	//init eaten map
@@ -78,8 +79,6 @@ int checkF(){									// check if all food is eaten
 	}
 	return count;
 }
-
-int point = 0;
 
 void init_detect_map(){
 	for (int i = 0; i < num; i++) {
