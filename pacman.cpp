@@ -299,7 +299,6 @@ void trace(Player &quoc, int x, int y){
 
 void gen_dir_trace(Player &quoc, Player &nam){
 	init_visited_minimum_map();
-	step = 0;
 	trace(quoc, nam.pos_x, nam.pos_y);	
 	if (minimum_map[nam.pos_x+1][nam.pos_y+0] == 1){
 		nam.dir = 's';
@@ -314,15 +313,15 @@ void gen_dir_trace(Player &quoc, Player &nam){
 		nam.dir = 'a';
 	}
 	
-//	cout<<' '<<endl;
-//	for (int i = 0; i < num; i++){
-//		for (int j = 0; j < num; j++){
-//				cout << ' ' << minimum_map[i][j]; 
-//			}
-//			cout << ' ' <<endl;
-//	}
-//	cout << ' '<<nam.dir << ' '<< nam.pos_x <<' ' <<' '<< nam.pos_y;
-//	_sleep(2000);
+	cout<<' '<<endl;
+	for (int i = 0; i < num; i++){
+		for (int j = 0; j < num; j++){
+				cout << ' ' << minimum_map[i][j]; 
+			}
+			cout << ' ' <<endl;
+	}
+	cout << ' '<<nam.dir << ' '<< nam.pos_x <<' ' <<' '<< nam.pos_y;
+	_sleep(2000);
 }
 
 
@@ -438,31 +437,33 @@ int main() {
 	quoc.name = 'Q';
     nam.pos_x = 6; nam.pos_y = 6;
 	nam.name = 'N';
-//    huong.pos_x = huong.pos_y = 3;
-//	huong.name = 'X';
+    huong.pos_x = huong.pos_y = 3;
+	huong.name = 'X';
 //    hong.pos_x = hong.pos_y = 10;
 //	hong.name = 'H';
 
     
     map[quoc.pos_x][quoc.pos_y] = quoc.name;
     map[nam.pos_x][nam.pos_y] = nam.name;
-//    map[huong.pos_x][huong.pos_y] = huong.name;
+    map[huong.pos_x][huong.pos_y] = huong.name;
 //    map[hong.pos_x][hong.pos_y] = hong.name;
     
 	display();
 	
 	nam.dir = gen_dir(nam);
-//	huong.dir = gen_dir(huong);
+	huong.dir = gen_dir(huong);
 //	hong.dir = gen_dir(hong);
 	
 	//====================================================PLAYER=============================================================//
 			enable_detect_mode = 1; 
-	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){  
-
+	while (checkF() != 0 ){  //&& checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false
+//		if (checkF() < 10){
+//			enable_detect_mode = 1;
+//		}
 		runningPlayer(quoc);
 		runningGhost(quoc,nam);
-//		runningGhost(huong);
-//		runningGhost(hong);
+//		runningGhost(quoc,huong);
+//		runningGhost(quoc,hong);
 		display();
 //		system ("cls");	
 //		for (int i = 0; i < num; i++){
@@ -472,18 +473,4 @@ int main() {
 //			cout << ' ' <<endl;
 //		}
 	}
-	
-//	nam.pos_x = 6; nam.pos_y = 8;
-//	cout << ' ' <<endl;
-//	cout << ' ' <<endl;
-//	gen_dir_trace(quoc,nam);
-////	
-////	
-//		nam.pos_x = 1; nam.pos_y = 8;
-//	cout << ' ' <<endl;
-//	cout << ' ' <<endl;	
-//		gen_dir_trace(quoc,nam);
-
-
-			
 }
