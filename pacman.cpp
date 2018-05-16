@@ -50,7 +50,36 @@ int detect_map[num][num];
 int minimum_map[num][num];
 int enable_detect_mode = 0;
 int step = 0, record = 999;
+int maxpoint = 110; 				// the place where the pacman presents is not counted
 
+void init_eaten_map(){
+	//init eaten map
+	for (int i = 0; i < num; i++) {
+        for (int j = 0; j < num; j++) {
+        	if (map[i][j] == '.' || map[i][j] == 'X' || map[i][j] == 'H' || map[i][j] == 'N'){
+        		eaten_map[i][j] = 1;			//edible
+			}
+			else {
+				eaten_map[i][j] = 0;			//in-edible
+			}
+
+        }
+    }	
+}
+
+int checkF(){									// check if all food is eaten
+	int count;
+	for (int i = 1; i < num-1; i++){
+		for (int j = 1; j < num-1; j++){
+			if (eaten_map[i][j] == 1){
+				count ++;
+			}
+		}
+	}
+	return count;
+}
+
+int point = 0;
 
 void init_detect_map(){
 	for (int i = 0; i < num; i++) {
@@ -61,15 +90,6 @@ void init_detect_map(){
 			else {
 				detect_map[i][j] = 1;		//go-able
 			}
-        }
-    }	
-}
-
-void init_eaten_map(){
-	//init eaten map
-	for (int i = 0; i < num; i++) {
-        for (int j = 0; j < num; j++) {
-            visited_map[i][j] = 0;
         }
     }	
 }
@@ -116,7 +136,7 @@ void display(){
 		}
 		cout << ' ' <<endl;
 	}
-	_sleep(300);
+	_sleep(50);
 }
 
 void moveQ(Player &quoc, int dx, int dy){				//move of player
@@ -124,12 +144,12 @@ void moveQ(Player &quoc, int dx, int dy){				//move of player
 	quoc.pos_x += dx;
 	quoc.pos_y += dy;
 	map[quoc.pos_x][quoc.pos_y] = quoc.name;
-	eaten_map[quoc.pos_x][quoc.pos_y] = 1;
+	eaten_map[quoc.pos_x][quoc.pos_y] = 0;
 
 }
 
 void moveN(Player &nam, char dir){						//move of ghost
-	if (eaten_map[nam.pos_x][nam.pos_y] == 1){
+	if (eaten_map[nam.pos_x][nam.pos_y] == 0){
 		map[nam.pos_x][nam.pos_y] = ' ';
 	}
 	else{
@@ -157,17 +177,7 @@ void moveN(Player &nam, char dir){						//move of ghost
 
 }
 
-int checkF(){									// check if all food is eaten
-	int count;
-	for (int i = 1; i < num-1; i++){
-		for (int j = 1; j < num-1; j++){
-			if (map[i][j] == '.'){
-				count ++;
-			}
-		}
-	}
-	return count;
-}
+
 
 int checkPvG (Player Q, Player N){				// check if player and ghosts meet
 	if (Q.pos_x == N.pos_x && Q.pos_y == N.pos_y){
@@ -274,7 +284,6 @@ void trace(Player &quoc, int x, int y){
 			record = measure_minimum();
 		}
 		
-//		exit(0);
 	}
 	else if (x < num-1 && x > 0 && y < num-1 && y > 0){
 		if (visited_map[x][y] == 1){
@@ -299,6 +308,7 @@ void trace(Player &quoc, int x, int y){
 
 void gen_dir_trace(Player &quoc, Player &nam){
 	init_visited_minimum_map();
+	record = 999;										// reset record
 	trace(quoc, nam.pos_x, nam.pos_y);	
 	if (minimum_map[nam.pos_x+1][nam.pos_y+0] == 1){
 		nam.dir = 's';
@@ -313,15 +323,15 @@ void gen_dir_trace(Player &quoc, Player &nam){
 		nam.dir = 'a';
 	}
 	
-	cout<<' '<<endl;
-	for (int i = 0; i < num; i++){
-		for (int j = 0; j < num; j++){
-				cout << ' ' << minimum_map[i][j]; 
-			}
-			cout << ' ' <<endl;
-	}
-	cout << ' '<<nam.dir << ' '<< nam.pos_x <<' ' <<' '<< nam.pos_y;
-	_sleep(2000);
+//	cout<<' '<<endl;
+//	for (int i = 0; i < num; i++){
+//		for (int j = 0; j < num; j++){
+//				cout << ' ' << minimum_map[i][j]; 
+//			}
+//			cout << ' ' <<endl;
+//	}
+//	cout << ' '<<nam.dir << ' '<< nam.pos_x <<' ' <<' '<< nam.pos_y;
+//	_sleep(2000);
 }
 
 
@@ -426,7 +436,7 @@ void runningGhost (Player &quoc, Player &nam){
 
 int main() {
 	
-	init_eaten_map();
+	
 	init_visited_minimum_map();
 	init_detect_map();
 	
@@ -439,32 +449,38 @@ int main() {
 	nam.name = 'N';
     huong.pos_x = huong.pos_y = 3;
 	huong.name = 'X';
-//    hong.pos_x = hong.pos_y = 10;
-//	hong.name = 'H';
+    hong.pos_x = hong.pos_y = 10;
+	hong.name = 'H';
 
     
     map[quoc.pos_x][quoc.pos_y] = quoc.name;
     map[nam.pos_x][nam.pos_y] = nam.name;
     map[huong.pos_x][huong.pos_y] = huong.name;
-//    map[hong.pos_x][hong.pos_y] = hong.name;
+    map[hong.pos_x][hong.pos_y] = hong.name;
     
 	display();
 	
 	nam.dir = gen_dir(nam);
 	huong.dir = gen_dir(huong);
-//	hong.dir = gen_dir(hong);
+	hong.dir = gen_dir(hong);
+	
+	init_eaten_map();
 	
 	//====================================================PLAYER=============================================================//
-			enable_detect_mode = 1; 
-	while (checkF() != 0 ){  //&& checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false
-//		if (checkF() < 10){
-//			enable_detect_mode = 1;
-//		}
+			enable_detect_mode = 0; 
+	while (checkF() != 0 && checkPvG(quoc,nam) == false && checkPvG(quoc,huong) == false && checkPvG(quoc,hong) == false){	
+		if (checkF() < 10){
+			enable_detect_mode = 1;
+		}
 		runningPlayer(quoc);
 		runningGhost(quoc,nam);
 //		runningGhost(quoc,huong);
 //		runningGhost(quoc,hong);
+
 		display();
+		cout << ' ' << endl <<"POINTS:  "<< ' ' << maxpoint - checkF();
+		_sleep(250);
+		
 //		system ("cls");	
 //		for (int i = 0; i < num; i++){
 //			for (int j = 0; j < num; j++){
@@ -473,4 +489,6 @@ int main() {
 //			cout << ' ' <<endl;
 //		}
 	}
+
+
 }
