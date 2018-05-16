@@ -49,7 +49,7 @@ int visited_map[num][num];
 int detect_map[num][num];
 int minimum_map[num][num];
 int enable_detect_mode = 0;
-int step = 0;
+int step = 0, record = 999;
 
 
 void init_detect_map(){
@@ -82,6 +82,30 @@ void init_visited_minimum_map(){
 			minimum_map[i][j] = 0;
         }
     }	
+}
+
+int measure_minimum(){
+	step = 0;
+	for (int i = 0; i < num; i++){
+		for (int j = 0; j < num; j++){
+			if (minimum_map[i][j] == 1){
+				step++;
+			}
+		}
+	}
+	return step;
+}
+
+int measure_visited(){
+	step = 0;
+	for (int i = 0; i < num; i++){
+		for (int j = 0; j < num; j++){
+			if (visited_map[i][j] == 1){
+				step++;
+			}
+		}
+	}
+	return step;
 }
 
 void display(){
@@ -240,14 +264,14 @@ char gen_dir(Player &H){				//generate a random direction for ghosts
 void trace(Player &quoc, int x, int y){
 	if (x == quoc.pos_x && y == quoc.pos_y){
 		visited_map[x][y] = 1;
-		step++;
 		
-		if (step == 1){
-			for (int i = 0; i < num; i++){
-				for (int j = 0; j < num; j++){
-					minimum_map[i][j] = visited_map[i][j];
-				}
-			}	
+		for (int i = 0; i < num; i++){
+			for (int j = 0; j < num; j++){
+				minimum_map[i][j] = visited_map[i][j];
+			}
+		}	
+		if (measure_minimum() < record){
+			record = measure_minimum();
 		}
 		
 //		exit(0);
@@ -257,6 +281,9 @@ void trace(Player &quoc, int x, int y){
 			return;
 		}
 		else if (detect_map[x][y] == 0){
+			return;
+		}
+		else if (record <= measure_visited()){
 			return;
 		}
 		else{
@@ -287,15 +314,15 @@ void gen_dir_trace(Player &quoc, Player &nam){
 		nam.dir = 'a';
 	}
 	
-	cout<<' '<<endl;
-	for (int i = 0; i < num; i++){
-		for (int j = 0; j < num; j++){
-				cout << ' ' << minimum_map[i][j]; 
-			}
-			cout << ' ' <<endl;
-	}
-	cout << ' '<<nam.dir << ' '<< nam.pos_x <<' ' <<' '<< nam.pos_y;
-	_sleep(2000);
+//	cout<<' '<<endl;
+//	for (int i = 0; i < num; i++){
+//		for (int j = 0; j < num; j++){
+//				cout << ' ' << minimum_map[i][j]; 
+//			}
+//			cout << ' ' <<endl;
+//	}
+//	cout << ' '<<nam.dir << ' '<< nam.pos_x <<' ' <<' '<< nam.pos_y;
+//	_sleep(2000);
 }
 
 
