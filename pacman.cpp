@@ -135,7 +135,6 @@ void display(){
 		}
 		cout << ' ' <<endl;
 	}
-	_sleep(50);
 }
 
 void moveQ(Player &quoc, int dx, int dy){				//move of player
@@ -448,20 +447,20 @@ int main() {
 	nam.name = 'N';
     huong.pos_x = huong.pos_y = 3;
 	huong.name = 'X';
-    hong.pos_x = hong.pos_y = 10;
-	hong.name = 'H';
+//    hong.pos_x = hong.pos_y = 10;
+//	hong.name = 'H';
 
     
     map[quoc.pos_x][quoc.pos_y] = quoc.name;
     map[nam.pos_x][nam.pos_y] = nam.name;
     map[huong.pos_x][huong.pos_y] = huong.name;
-    map[hong.pos_x][hong.pos_y] = hong.name;
+//    map[hong.pos_x][hong.pos_y] = hong.name;
     
 	display();
 	
 	nam.dir = gen_dir(nam);
 	huong.dir = gen_dir(huong);
-	hong.dir = gen_dir(hong);
+//	hong.dir = gen_dir(hong);
 	
 	init_eaten_map();
 	
@@ -473,7 +472,7 @@ int main() {
 		}
 		runningPlayer(quoc);
 		runningGhost(quoc,nam);
-//		runningGhost(quoc,huong);
+		runningGhost(quoc,huong);
 //		runningGhost(quoc,hong);
 
 		display();
